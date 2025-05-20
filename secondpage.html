@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Happy birthday</title>
+  </head>
+  <body>
+    <!-- Tiktok meowish -->
+    <canvas id="c"></canvas>
+
+    <script src="script.js"></script>
+
+    <script>
+      // Redirect to ballon_game page when anywhere on the page is clicked
+      document.body.addEventListener('click', () => {
+        window.location.href = 'balloon_game.html';
+      });
+
+      // Optional: prevent the click event on button from triggering twice or unwanted side effects
+      document.getElementById('goButton').addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevents the body click listener from firing twice if needed
+        // You can also add button-specific behavior here if you want
+        window.location.href = 'ballon_game.html';
+      });
+    </script>
+  </body>
+</html>

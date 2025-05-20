@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lights On!</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Quicksand', sans-serif;
+      flex-direction: column;
+    }
+    button {
+      font-size: 2rem;
+      padding: 20px 40px;
+      border-radius: 40px;
+      border: none;
+      background: #ff4081;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background: #f06292;
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <h1 style="margin-bottom: 20px;">Shhh... it's a surprise! 🎁</h1>
+  <button onclick="start()">💡 Lights On!</button>
+  <audio id="boomSound" src="https://www.fesliyanstudios.com/play-mp3/6673" preload="auto"></audio>
+  <script>
+    function start() {
+      document.getElementById('boomSound').play();
+      setTimeout(() => {
+        window.location.href = 'secondpage.html';
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

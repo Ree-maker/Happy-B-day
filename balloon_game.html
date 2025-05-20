@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Balloon Popping Game</title>
+<style>
+  body {
+    margin: 0; padding: 0;
+    background: linear-gradient(to top, #74ebd5 0%, #ACB6E5 100%);
+    font-family: 'Quicksand', sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    color: #222;
+  }
+  header {
+    padding: 20px;
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+  #gameArea {
+    position: relative;
+    flex-grow: 1;
+    width: 100vw;
+    overflow: hidden;
+  }
+  .balloon {
+    position: absolute;
+    bottom: -100px;
+    border-radius: 50% / 60%;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.3s ease-out;
+  }
+  .balloon:active {
+    transform: scale(1.1);
+  }
+  .pop {
+    animation: popAnim 0.4s forwards;
+  }
+  @keyframes popAnim {
+    0% {
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.5) rotate(30deg);
+      opacity: 0;
+    }
+  }
+  #counter {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  #nextBtn {
+    margin: 15px;
+    padding: 12px 28px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 25px;
+    background-color: #ff6f91;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(255, 111, 145, 0.5);
+    transition: background-color 0.3s ease;
+  }
+  #nextBtn:hover {
+    background-color: #ff8fa3;
+  }
+</style>
+</head>
+<body>
+
+<header>Pop the balloons! 🎈</header>
+<div id="counter">Balloons popped: 0</div>
+<div id="gameArea"></div>
+<button id="nextBtn" disabled>Go to Final Letter</button>
+
+<!-- Pop sound -->
+<audio id="popSound" src="https://freesound.org/data/previews/522/522495_11274150-lq.mp3" preload="auto"></audio>
+
+<script>
+  const gameArea = document.getElementById('gameArea');
+  const counter = document.getElementById('counter');
+  const nextBtn = document.getElementById('nextBtn');
+  const popSound = document.getElementById('popSound');
+
+  const colors = ['#FF6F91', '#FF9671', '#FFC75F', '#F9F871', '#B0F2B6'];
+  let poppedCount = 0;
+  const totalBalloons = 15; // number of balloons on screen
+
+  // Create balloons and animate upwards
+  function createBalloon(id) {
+    const balloon = document.createElement('div');
+    balloon.classList.add('balloon');
+    balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    balloon.style.width = '50px';
+    balloon.style.height = '70px';
+    balloon.style.left = Math.random() * (window.innerWidth - 60) + 'px';
+    balloon.style.bottom = '-80px';
+    balloon.style.animation = `floatUp ${10 + Math.random()*10}s linear forwards`;
+    balloon.style.animationDelay = Math.random() * 5 + 's';
+    balloon.dataset.id = id;
+
+    // Balloon float animation
+    balloon.animate(
+      [
+        { transform: 'translateY(0)' },
+        { transform: `translateY(-${window.innerHeight + 100}px)` }
+      ],
+      {
+        duration: 15000 + Math.random() * 10000,
+        iterations: 1,
+        easing: 'linear'
+      }
+    );
+
+    // Remove balloon after animation
+    balloon.addEventListener('animationend', () => {
+      if (balloon.parentElement) {
+        balloon.remove();
+        spawnBalloon();
+      }
+    });
+
+    // Click to pop
+    balloon.addEventListener('click', () => {
+      if (balloon.classList.contains('pop')) return; // already popped
+      balloon.classList.add('pop');
+      popSound.currentTime = 0;
+      popSound.play();
+      poppedCount++;
+      counter.textContent = `Balloons popped: ${poppedCount}`;
+
+      // Remove balloon after pop animation
+      setTimeout(() => {
+        balloon.remove();
+        spawnBalloon();
+      }, 400);
+
+      // Enable next button after popping enough balloons
+      if (poppedCount >= totalBalloons) {
+        nextBtn.disabled = false;
+        nextBtn.textContent = '🎉 Go to Final Letter!';
+      }
+    });
+
+    gameArea.appendChild(balloon);
+  }
+
+  // Spawn a balloon to keep the game going
+  function spawnBalloon() {
+    createBalloon(Date.now());
+  }
+
+  // Initial batch of balloons
+  for (let i = 0; i < totalBalloons; i++) {
+    createBalloon(i);
+  }
+
+  // Next button action
+  nextBtn.addEventListener('click', () => {
+    window.location.href = 'letter.html';
+  });
+</script>
+
+</body>
+</html>
